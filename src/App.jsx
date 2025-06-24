@@ -115,7 +115,7 @@ const App = () => {
 
                 {/* Main Movie Section */}
                 <section className="all-movies">
-                    <h1>Trending Now</h1>
+                    <h1>Trending Movies</h1>
                     {isLoading ? (
                         <Spinner />
                     ) : errorMessage ? (
