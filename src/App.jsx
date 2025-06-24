@@ -8,14 +8,6 @@ import { getTrendMovies, updateSearchCount } from './appwrite.js';
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_Key = import.meta.env.VITE_TMDB_API_KEY;
 
-const API_OPTIONS = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_Key}`,
-    },
-};
-
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -35,10 +27,10 @@ const App = () => {
         setErrorMessage('');
         try {
             const endpoint = query
-                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+                ? `${API_BASE_URL}/search/movie?api_key=${API_Key}&query=${encodeURIComponent(query)}`
+                : `${API_BASE_URL}/discover/movie?api_key=${API_Key}&sort_by=popularity.desc`;
 
-            const response = await fetch(endpoint, API_OPTIONS);
+            const response = await fetch(endpoint);
 
             if (!response.ok) {
                 throw new Error('Something went wrong');
@@ -71,7 +63,7 @@ const App = () => {
     const loadTrendingMovies = async () => {
         try {
             const movies = await getTrendMovies();
-            console.log("🔥 Trending from Appwrite:", movies); // Debug
+            console.log("🔥 Trending from Appwrite:", movies);
             setTrendingMovies(movies);
         } catch (error) {
             console.log(`Error fetching trending movies:`, error);
@@ -103,12 +95,12 @@ const App = () => {
                     <section className="trending">
                         <h1>Top Searches</h1>
                         <ul>
-                        {trendingMovies.map((movie,index) => (
-                            <li key = {movie.$id}>
-                            <p>{index+1}</p>
-                            <img src={movie.poster_url} alt={movie.title}/>
-                            </li>
-                        ))}
+                            {trendingMovies.map((movie, index) => (
+                                <li key={movie.$id}>
+                                    <p>{index + 1}</p>
+                                    <img src={movie.poster_url} alt={movie.title} />
+                                </li>
+                            ))}
                         </ul>
                     </section>
                 )}
